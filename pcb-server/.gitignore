@@ -1,0 +1,25 @@
+
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+
+.DS_Store
+node_modules
+package-lock.json
+dist/
+######################################################################
+# Others
+*.log
+*.xml.versionsBackup
+logs
+

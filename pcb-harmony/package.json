@@ -1,0 +1,23 @@
+{
+  "license": "ISC",
+  "devDependencies": {},
+  "name": "pcb",
+  "ohos": {
+    "org": "huawei",
+    "directoryLevel": "project",
+    "buildTool": "hvigor"
+  },
+  "description": "example description",
+  "repository": {},
+  "version": "1.0.0",
+  "dependencies": {
+    "@ohos/hypium": "1.0.6",
+    "@hmscore/hms-jsb-account": "^6.5.300",
+    "@hw-hmscore/hms-js-base": "^6.8.0-300",
+    "@ohos/hvigor-ohos-plugin": "2.4.2",
+    "@ohos/hvigor": "2.4.2",
+    "axios": "^0.21.1",
+    "@hmscore/hms-js-account": "^5.2.0-300",
+    "@hw-hmscore/hms-jsb-account": "^6.11.0-300"
+  }
+}

@@ -1,0 +1,5 @@
+<div class="container">
+    <text class="title">
+        {{ title }}0
+    </text>
+</div>

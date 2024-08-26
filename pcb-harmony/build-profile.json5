@@ -1,0 +1,41 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\ZT-JayChou\\.ohos\\config\\auto_debug_pcb_zjnu.huawei.pcb_80086000307292048.cer",
+          "storePassword": "0000001B9768CDADE593C19899622B607BF39F4F3FF2FB6E982AE4F1BEC5FE3DC3276DD5D83BD254CD950B",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B4DEFD72BBCCEFE3D2A83E77E0D9F5C22FC0C9A6333428A6223F56286CD297B1376885BB2203230",
+          "profile": "C:\\Users\\ZT-JayChou\\.ohos\\config\\auto_debug_pcb_zjnu.huawei.pcb_80086000307292048.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\ZT-JayChou\\.ohos\\config\\auto_debug_pcb_zjnu.huawei.pcb_80086000307292048.p12"
+        }
+      }
+    ],
+    "compileSdkVersion": 8,
+    "compatibleSdkVersion": 8,
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
