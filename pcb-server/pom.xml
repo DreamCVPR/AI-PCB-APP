@@ -139,6 +139,12 @@
             <artifactId>jose4j</artifactId>
             <version>0.9.3</version>
         </dependency>
+
+        <!-- aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
     </dependencies>
 
 

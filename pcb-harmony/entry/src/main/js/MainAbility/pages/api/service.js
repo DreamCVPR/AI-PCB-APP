@@ -1,9 +1,9 @@
 import request from '../utils/request'
 
 
-export function getServiceToken (parameter) {
+export function predict (parameter) {
     return request({
-        url: '/service/getServiceToken',
+        url: '/service/predict',
         method: 'post',
         data: parameter
     })

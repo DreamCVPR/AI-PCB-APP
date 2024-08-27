@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import zjnu.huawei.pcb.config.exception.CommonJsonException;
 import zjnu.huawei.pcb.controller.BaseController;
 import zjnu.huawei.pcb.dto.basic.IAMUserDTO;
@@ -16,6 +18,8 @@ import zjnu.huawei.pcb.utils.harmony.CommonUtil;
 import zjnu.huawei.pcb.utils.harmony.ErrorEnum;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/service")
@@ -24,15 +28,11 @@ public class ServiceController extends BaseController {
     private ServiceService serviceService;
     private final Logger logger = LoggerFactory.getLogger(ServiceController.class);
 
-    @RequestMapping("/getServiceToken")
-    public JSONObject getToken(@RequestBody JSONObject jsonObject) {
+    @RequestMapping("/predict")
+    public JSONObject predict(HttpServletRequest request) {
         try{
-//            if(huaweiUserInfoDTO.getIdToken() == null ){
-//                return CommonUtil.errorJson(ErrorEnum.E_90003);
-//            }else{
-//                return CommonUtil.successJson(serviceService.getServiceToken(jsonObject));
-//            }
-            return CommonUtil.successJson(serviceService.getServiceToken(jsonObject));
+            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+            return CommonUtil.successJson(serviceService.predict(files));
         }catch (CommonJsonException e) {
             throw e;
         }catch (Exception e) {

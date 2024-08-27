@@ -11,12 +11,24 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import zjnu.huawei.pcb.service.basic.impl.ServiceServiceImpl;
 
 import javax.annotation.PostConstruct;
 import javax.net.ssl.HttpsURLConnection;
@@ -133,7 +145,37 @@ public class HarmonyUtil {
         HttpResponse response = httpClient.execute(httpPost);
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity, "UTF-8");
-        return JSONObject.parseObject(result);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("headers", response.getAllHeaders());
+        jsonObject.put("body", JSONObject.parseObject(result));
+        return jsonObject;
+    }
+
+    public static JSONObject sendPostFile(String url, MultipartFile file) throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", "multipart/form-data");
+        headers.set("x-auth-token", ServiceServiceImpl.serviceToken.getString("token"));
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        InputStream inputStream = file.getInputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
+        byte[] byteArray = outputStream.toByteArray();
+        String filename = file.getOriginalFilename();
+        map.add("file", new ByteArrayResource(byteArray){
+            @Override
+            public String getFilename() {
+                return filename; // 设置文件名
+            }
+        });
+        org.springframework.http.HttpEntity<MultiValueMap<String, Object>> param = new org.springframework.http.HttpEntity<>(map, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, param, String.class);
+        String body = response.getBody();
+        return JSONObject.parseObject(body);
     }
 
     public static JSONObject sendGet(String urlParam) throws IOException {
@@ -157,7 +199,7 @@ public class HarmonyUtil {
         url = new URL(reqUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
-        connection.setRequestProperty("content-type", "application/json");
+        connection.setRequestProperty("x-auth-token", ServiceServiceImpl.serviceToken.getString("token"));
         // Read from the connection. Default is true.
         connection.setDoInput(true);
         // Set the post method. Default is GET

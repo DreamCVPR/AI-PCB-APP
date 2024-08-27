@@ -1,5 +1,5 @@
 import {login, getToken} from '../api/account.js'
-import {getServiceToken} from '../api/IAM.js'
+import {predict} from '../api/service.js'
 
 import featureAbility from '@ohos.ability.featureAbility';
 import store from '../utils/store.js';
@@ -25,28 +25,7 @@ export default {
         this.getToken()
     },
     getToken() {
-        let body = {
-            "auth": {
-                "identity": {
-                    "methods": ["password"],
-                    "password": {
-                        "user": {
-                            "name": "syz123",
-                            "password": "syz123456",
-                            "domain": {
-                                "name": "hid_f3k68vkxutitlas"
-                            }
-                        }
-                    }
-                },
-                "scope": {
-                    "project": {
-                        "name": "cn-southwest-2"
-                    }
-                }
-            }
-        }
-        getServiceToken(body)
+        predict()
             .then(async (res)=>{
                 console.log("successgetinfo:"+res)
                 await store.set('serviceToken', res.result.token)
