@@ -26,7 +26,14 @@ public class ServiceServiceImpl implements ServiceService {
 
     @AutoServiceToken
     @Override
-    public List<JSONObject> predict(List<MultipartFile> files) throws Exception {
+    public JSONObject predict(MultipartFile file) throws Exception {
+        String url = "https://infer-modelarts-cn-southwest-2.myhuaweicloud.com/v1/infers/027d2872-04c6-45b3-a9b9-b0c050676c29";
+        return HarmonyUtil.sendPostFile(url, file);
+    }
+
+    @AutoServiceToken
+    @Override
+    public List<JSONObject> predictBatch(List<MultipartFile> files) throws Exception {
         String url = "https://infer-modelarts-cn-southwest-2.myhuaweicloud.com/v1/infers/027d2872-04c6-45b3-a9b9-b0c050676c29";
         List<JSONObject> res = new ArrayList<>();
         for (MultipartFile file : files) {

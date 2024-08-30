@@ -1,5 +1,8 @@
 server:
   port: 6666
+  tomcat:
+    max-http-form-post-size: 1000MB
+
 
 spring:
   datasource:
@@ -27,8 +30,8 @@ spring:
     multipart:
       enabled: true
       file-size-threshold: 0
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 1000MB
+      max-request-size: 1000MB
   freemarker:
     checkTemplateLocation: false
   thymeleaf:
@@ -59,6 +62,13 @@ logging:
     zjnu.huawei.pcb.mapper: debug
 #  file:
 #    name: D:/navy/log/navy_error_log.log
+
+minio:
+  endpoint: http://localhost:9000
+  url: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: pcb
 
 # 应用自定义属性
 application:

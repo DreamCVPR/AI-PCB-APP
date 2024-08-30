@@ -4,12 +4,22 @@ import com.alibaba.fastjson.JSONObject;
 
 public class HarmonyTokenDTO {
 
+    private Long harmonyUserId;
+
     private String iss;
     private String sub;
     private String aud;
     private Long exp;
     private Long iat;
     private String given_name;
+
+    public Long getHarmonyUserId() {
+        return harmonyUserId;
+    }
+
+    public void setHarmonyUserId(Long harmonyUserId) {
+        this.harmonyUserId = harmonyUserId;
+    }
 
     public String getIss() {
         return iss;

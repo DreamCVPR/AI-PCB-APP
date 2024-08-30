@@ -56,8 +56,7 @@ public class JWTUtil {
             Claim seed_claim = claims.get("seed");
             String jsonSign = seed_claim.asString();
             JSONObject jsonObject = JSONObject.parseObject(jsonSign);
-            harmonyTokenDTO.setSub(jsonObject.getString("sub"));
-            harmonyTokenDTO.setAud(jsonObject.getString("aud"));
+            harmonyTokenDTO.setHarmonyUserId(jsonObject.getLong("harmonyUserId"));
         } catch (Exception e) {
             logger.error("Token验证======>" + harmonyTokenDTO);
             logger.error(e.toString());
