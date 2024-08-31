@@ -1,7 +1,8 @@
 package zjnu.huawei.pcb.config.aop;
 
+import zjnu.huawei.pcb.config.exception.CommonJsonException;
 import zjnu.huawei.pcb.config.exception.PreAuthorizeException;
-import zjnu.huawei.pcb.dto.harmony.HarmonyTokenDTO;
+import zjnu.huawei.pcb.dto.system.HarmonyTokenDTO;
 import zjnu.huawei.pcb.utils.JWTUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -11,6 +12,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import zjnu.huawei.pcb.utils.harmony.ErrorEnum;
 
 import java.lang.reflect.Method;
 
@@ -34,10 +36,12 @@ public class PreAuthorizeAspect {
             String token = attributes.getRequest().getHeader("Access-Token");
             HarmonyTokenDTO harmonyTokenDTO = JWTUtil.verifyHarmonyToken(token);
             attributes.getResponse().setHeader("token_status", "0");
-            if (harmonyTokenDTO.getHarmonyUserId() <= 0) {
-                throw new PreAuthorizeException();
+            if (harmonyTokenDTO == null || harmonyTokenDTO.getHarmonyUserId() == null) {
+                throw new CommonJsonException(ErrorEnum.E_401);
             }
             attributes.getResponse().setHeader("token_status", "1");
+        } catch (CommonJsonException e) {
+            throw e;
         } catch (Exception e) {
             throw new PreAuthorizeException();
         }

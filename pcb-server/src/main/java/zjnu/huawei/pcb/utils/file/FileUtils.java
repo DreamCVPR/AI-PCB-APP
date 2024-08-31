@@ -27,7 +27,7 @@ public class FileUtils
     public static MultipartFile base642MultipartFile(String base64String, String fileName) throws Exception {
         byte[] bytes = Base64.getDecoder().decode(base64String);
         FileItemFactory factory = new DiskFileItemFactory(16, null);
-        FileItem fileItem = factory.createItem("images", "images/jpeg", false, fileName);
+        FileItem fileItem = factory.createItem("images", "images/"+fileName.split("\\.")[1], false, fileName);
         IOUtils.copy(new ByteArrayInputStream(bytes), fileItem.getOutputStream());
         return new CommonsMultipartFile(fileItem);
     }

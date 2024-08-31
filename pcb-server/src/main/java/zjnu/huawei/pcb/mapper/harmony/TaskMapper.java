@@ -20,6 +20,16 @@ public interface TaskMapper {
             "</script>"})
     List<TaskEntity> queryById(@Param("harmony_user_id") Long harmony_user_id) throws Exception;
 
+    @Select({"<script>SELECT " +
+            "ht.task_id, COALESCE(SUM(is_detect), 0) as countDetectImg, COUNT(is_detect) as countAllImg " +
+            "FROM harmony_task ht LEFT JOIN task_img ti on ti.task_id = ht.task_id " +
+            "WHERE TRUE " +
+            "AND harmony_user_id = #{harmony_user_id} " +
+            "GROUP BY " +
+            "task_id " +
+            "</script>"})
+    List<TaskEntity> countDetectImg(@Param("harmony_user_id") Long harmony_user_id) throws Exception;
+
     @Insert({"<script>" +
             "INSERT INTO harmony_task (" +
             "task_name, task_desc, harmony_user_id, task_state, gmt_create) " +

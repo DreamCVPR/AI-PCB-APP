@@ -53,7 +53,7 @@ public class TaskController extends BaseController {
             TaskDTO taskDTO = new TaskDTO();
             taskDTO.setTaskName(jsonObject.getString("task_name"));
             taskDTO.setTaskDesc(jsonObject.getString("task_desc"));
-            taskDTO.setFiles(FileUtils.base642MultipartFileList(jsonObject.getJSONArray("files"), jsonObject.getJSONArray("fileNames")));
+            taskDTO.setBase64Files(jsonObject.getJSONArray("files"), jsonObject.getJSONArray("fileNames"));
             taskDTO.setHarmonyUserId(harmonyUserId);
             return CommonUtil.successJson(taskService.add(taskDTO));
         } catch (CommonJsonException e) {

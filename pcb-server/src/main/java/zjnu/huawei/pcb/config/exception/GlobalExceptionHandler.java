@@ -43,6 +43,13 @@ public class GlobalExceptionHandler {
         return CommonUtil.errorJson(HttpStatus.ERROR);
     }
 
+    @ExceptionHandler(CommonJsonException.class)
+    public JSONObject handleRuntimeException(CommonJsonException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}',发生未知异常.", requestURI, e);
+        return e.getResultJson();
+    }
+
     /**
      * 系统异常
      */

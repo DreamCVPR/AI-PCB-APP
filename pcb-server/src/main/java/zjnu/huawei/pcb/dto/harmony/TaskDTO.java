@@ -1,5 +1,7 @@
 package zjnu.huawei.pcb.dto.harmony;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +21,14 @@ public class TaskDTO {
     private Long harmonyUserId;
     private Integer taskState;
     private List<MultipartFile> files;
+    private JSONObject base64Files;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date gmtCreate;
+
+    public void setBase64Files(JSONArray files, JSONArray fileNames) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("files", files);
+        jsonObject.put("fileNames", fileNames);
+        this.base64Files = jsonObject;
+    }
 }

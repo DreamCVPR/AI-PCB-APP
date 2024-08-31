@@ -38,6 +38,7 @@ public class FileController extends BaseController {
     /*
      * @Description 下载图片
      **/
+    @PreAuthorize(false)
     @GetMapping("/download/image/{fileName}")
     public void downloadImage(@PathVariable("fileName") String fileName, HttpServletResponse httpResponse) {
         if (fileName == null || "null".equals(fileName)) {

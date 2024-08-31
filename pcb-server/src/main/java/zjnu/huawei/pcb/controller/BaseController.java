@@ -1,7 +1,7 @@
 package zjnu.huawei.pcb.controller;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
-import zjnu.huawei.pcb.dto.harmony.HarmonyTokenDTO;
+import zjnu.huawei.pcb.dto.system.HarmonyTokenDTO;
 import zjnu.huawei.pcb.utils.JWTUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,9 @@ public class BaseController {
         if (token != null) {
             this.token = token;
             HarmonyTokenDTO harmonyTokenDTO = JWTUtil.verifyHarmonyToken(token);
-            this.harmonyUserId = harmonyTokenDTO.getHarmonyUserId();
+            if (harmonyTokenDTO != null) {
+                this.harmonyUserId = harmonyTokenDTO.getHarmonyUserId();
+            }
         }
     }
 }

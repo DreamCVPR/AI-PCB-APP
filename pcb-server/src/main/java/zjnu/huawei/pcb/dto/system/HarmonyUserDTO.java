@@ -1,14 +1,16 @@
-package zjnu.huawei.pcb.entity.system;
+package zjnu.huawei.pcb.dto.system;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HarmonyUserEntity {
+public class HarmonyUserDTO {
     private Long harmonyUserId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date gmtCreate;
@@ -19,4 +21,11 @@ public class HarmonyUserEntity {
     private String userPhone;
     private String loginName;
     private String loginPwd;
+    private String token;
+
+    public HarmonyUserDTO(String userName, String userPhone, String token) {
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.token = token;
+    }
 }
