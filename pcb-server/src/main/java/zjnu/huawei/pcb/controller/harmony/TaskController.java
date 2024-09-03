@@ -36,9 +36,10 @@ public class TaskController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
-    public JSONObject query() {
+    public JSONObject query(@RequestBody TaskDTO taskDTO) {
         try {
-            return CommonUtil.successJson(taskService.query(harmonyUserId));
+            taskDTO.setHarmonyUserId(harmonyUserId);
+            return CommonUtil.successJson(taskService.query(taskDTO));
         } catch (CommonJsonException e) {
             throw e;
         } catch (Exception e) {
@@ -77,7 +78,7 @@ public class TaskController extends BaseController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public JSONObject remove(HttpServletRequest request) throws Exception {
+    public JSONObject remove() throws Exception {
         JSONObject jsonObject = HttpRequestReader.getJsonObject(request);
         String taskIds = jsonObject.getString("taskIds");
         try {

@@ -1,5 +1,6 @@
 package zjnu.huawei.pcb.service.harmony.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.SneakyThrows;
@@ -9,6 +10,8 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import zjnu.huawei.pcb.dto.harmony.TaskDTO;
@@ -47,17 +50,18 @@ public class TaskServiceImpl implements TaskService {
     private MinioUtil minioUtil;
 
     @Override
-    public List<TaskEntity> query(Long harmonyUserId) throws Exception {
-        List<TaskEntity> counts = taskMapper.countDetectImg(harmonyUserId);
-        List<TaskEntity> taskList = taskMapper.queryById(harmonyUserId);
+    public List<TaskDTO> query(TaskDTO taskDTO) throws Exception {
+        List<TaskDTO> counts = taskMapper.countDetectImg(taskDTO.getHarmonyUserId());
+        List<TaskDTO> taskList = taskMapper.queryById(taskDTO);
         JSONObject taskMapCount = new JSONObject();
-        for (TaskEntity count : counts) {
-            taskMapCount.put(count.getTaskId().toString(), new Integer[]{count.getCountDetectImg(), count.getCountAllImg()});
+        for (TaskDTO count : counts) {
+            taskMapCount.put(count.getTaskId().toString(), new Integer[]{count.getCountDetectImg(), count.getCountAllImg(), count.getCountDefectImg()});
         }
-        for (TaskEntity taskEntity : taskList) {
-            JSONArray count = taskMapCount.getJSONArray(taskEntity.getTaskId().toString());
-            taskEntity.setCountDetectImg(count.getInteger(0));
-            taskEntity.setCountAllImg(count.getInteger(1));
+        for (TaskDTO task : taskList) {
+            JSONArray count = taskMapCount.getJSONArray(task.getTaskId().toString());
+            task.setCountDetectImg(count.getInteger(0));
+            task.setCountAllImg(count.getInteger(1));
+            task.setCountDefectImg(count.getInteger(2));
         }
         return taskList;
     }
@@ -76,17 +80,9 @@ public class TaskServiceImpl implements TaskService {
             @Override
             public void run() {
                 try {
-                    List<MultipartFile> files = FileUtils.base642MultipartFileList(base64Files.getJSONArray("files"), base64Files.getJSONArray("fileNames"));
-                    if (files.size() > 0) {
-                        List<TaskImgDTO> taskImgList = new ArrayList<>();
-                        for (int i = 0; i < files.size(); i++) {
-                            String fileName = files.get(i).getOriginalFilename();
-                            String saveName= taskDTO.getHarmonyUserId() + "_"+i+(System.currentTimeMillis()+fileName.substring(fileName.lastIndexOf('.')));
-                            minioUtil.upload(files.get(i), "image/" + saveName);
-                            taskImgList.add(new TaskImgDTO(fileName, saveName, 0, taskEntity.getTaskId(), new Date()));
-                        }
-                        taskImgService.addList(taskImgList);
-                    }
+                    base64Files.put("harmonyUserId", taskDTO.getHarmonyUserId());
+                    base64Files.put("taskId", taskEntity.getTaskId());
+                    taskImgService.add(base64Files);
                 } finally {
                     taskEntity.setTaskState(0);
                     taskMapper.update(taskEntity);
@@ -120,7 +116,12 @@ public class TaskServiceImpl implements TaskService {
         String[] taskId = taskIds.split(",");
         Integer res = 0;
         for (String id : taskId) {
-            res += taskMapper.remove(Long.parseLong(id));
+            res += taskMapper.softRemove(Long.parseLong(id), new Date());
+            taskMapper.softRemoveImg(Long.parseLong(id), new Date());
+//            List<String> imgUrlList = taskMapper.queryImgUrlById(Long.parseLong(id));
+//            for (String imgUrl : imgUrlList) {
+//                minioUtil.remove(imgUrl);
+//            }
         }
         return res;
     }
@@ -129,23 +130,14 @@ public class TaskServiceImpl implements TaskService {
 //    @Transactional(rollbackFor = Exception.class)
     public Integer detect(Long taskId) throws Exception {
         List<TaskImgEntity> taskImgList = taskImgMapper.queryNotDetectById(taskId);
-        if (taskImgList.size() > 0) {
-            taskMapper.updateState(new TaskEntity(taskId, 2));
-            Thread thread = new Thread(new Runnable() {
-                @SneakyThrows
-                @Override
-                public void run() {
-                    try {
-                        for (TaskImgEntity taskImgEntity : taskImgList) {
-                            detectOne(taskImgEntity);
-                        }
-                    } finally {
-                        taskMapper.updateState(new TaskEntity(taskId, 0));
-                    }
-                }
-            });
-            thread.start();
-        }
+        Thread thread = new Thread(new Runnable() {
+            @SneakyThrows
+            @Override
+            public void run() {
+                taskImgService.detect(taskImgList);
+            }
+        });
+        thread.start();
         return taskImgList.size();
     }
 
@@ -159,7 +151,7 @@ public class TaskServiceImpl implements TaskService {
         taskImgEntity.setDetectionClasses(pred.getString("detection_classes"));
         taskImgEntity.setDetectionBoxes(pred.getString("detection_boxes"));
         taskImgEntity.setDetectionScores(pred.getString("detection_scores"));
-        taskImgMapper.update(taskImgEntity);
+        taskImgMapper.updateDetect(taskImgEntity);
         return 1;
     }
 }

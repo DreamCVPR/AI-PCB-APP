@@ -20,6 +20,10 @@ public class TaskDTO {
     private String taskDesc; 
     private Long harmonyUserId;
     private Integer taskState;
+    private String taskCoverImg;
+    private Integer countDetectImg;
+    private Integer countAllImg;
+    private Integer countDefectImg;
     private List<MultipartFile> files;
     private JSONObject base64Files;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

@@ -1,12 +1,14 @@
 package zjnu.huawei.pcb.controller.file;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.Cleanup;
 import zjnu.huawei.pcb.config.MinioConfig;
 import zjnu.huawei.pcb.config.aop.PreAuthorize;
 import zjnu.huawei.pcb.config.exception.CommonJsonException;
 import zjnu.huawei.pcb.controller.BaseController;
 import zjnu.huawei.pcb.utils.HttpRequestReader;
 import zjnu.huawei.pcb.utils.JWTUtil;
+import zjnu.huawei.pcb.utils.file.FileUtils;
 import zjnu.huawei.pcb.utils.file.MinioUtil;
 import io.minio.GetObjectArgs;
 import io.minio.GetObjectResponse;
@@ -39,7 +41,7 @@ public class FileController extends BaseController {
      * @Description 下载图片
      **/
     @PreAuthorize(false)
-    @GetMapping("/download/image/{fileName}")
+    @GetMapping("/download/{fileName}")
     public void downloadImage(@PathVariable("fileName") String fileName, HttpServletResponse httpResponse) {
         if (fileName == null || "null".equals(fileName)) {
            return;
@@ -58,6 +60,25 @@ public class FileController extends BaseController {
             }
             outputStream.flush();
             outputStream.close();
+        } catch (Exception ex) {
+            logger.info("下载失败" + ex.getMessage());
+        }
+    }
+
+    @PreAuthorize(false)
+    @GetMapping("/compress/{fileName}")
+    public void downloadCompressImage(@PathVariable("fileName") String fileName, HttpServletResponse httpResponse) {
+        if (fileName == null || "null".equals(fileName)) {
+            return;
+        }
+        try {
+            MultipartFile file = minioUtil.getFile(fileName, fileName);
+            httpResponse.reset();
+            httpResponse.setHeader("Content-Disposition", "filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            httpResponse.setContentType(file.getContentType());
+            httpResponse.setCharacterEncoding("utf-8");
+            @Cleanup OutputStream outputStream = httpResponse.getOutputStream();
+            FileUtils.compressImage(file.getInputStream(), outputStream, 0.5);
         } catch (Exception ex) {
             logger.info("下载失败" + ex.getMessage());
         }
@@ -95,7 +116,7 @@ public class FileController extends BaseController {
         try {
             JSONObject jsonObject = HttpRequestReader.getJsonObject(request);
             String fileName = jsonObject.getString("fileName");
-            minioUtil.remove(fileName, "image");
+            minioUtil.remove(fileName);
             return CommonUtil.successJson("删除成功");
         } catch (CommonJsonException e) {
             throw e;

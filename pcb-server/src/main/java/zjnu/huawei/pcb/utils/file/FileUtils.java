@@ -1,6 +1,7 @@
 package zjnu.huawei.pcb.utils.file;
 
 import com.alibaba.fastjson.JSONArray;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -27,7 +28,7 @@ public class FileUtils
     public static MultipartFile base642MultipartFile(String base64String, String fileName) throws Exception {
         byte[] bytes = Base64.getDecoder().decode(base64String);
         FileItemFactory factory = new DiskFileItemFactory(16, null);
-        FileItem fileItem = factory.createItem("images", "images/"+fileName.split("\\.")[1], false, fileName);
+        FileItem fileItem = factory.createItem("images", "images/"+fileName.split("\\.")[1].replace("jpg", "jpeg"), false, fileName);
         IOUtils.copy(new ByteArrayInputStream(bytes), fileItem.getOutputStream());
         return new CommonsMultipartFile(fileItem);
     }
@@ -38,5 +39,12 @@ public class FileUtils
             res.add(base642MultipartFile(base64String.getString(i), fileName.getString(i)));
         }
         return res;
+    }
+
+    public static void compressImage(InputStream inputStream, OutputStream outputStream, Double quality) throws IOException {
+        Thumbnails.of(inputStream)
+                .scale(1.0)
+                .outputQuality(quality)
+                .toOutputStream(outputStream);
     }
 }

@@ -1,5 +1,6 @@
 package zjnu.huawei.pcb.controller.harmony;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import zjnu.huawei.pcb.config.exception.CommonJsonException;
 import zjnu.huawei.pcb.controller.BaseController;
 import zjnu.huawei.pcb.dto.harmony.TaskDTO;
 import zjnu.huawei.pcb.dto.harmony.TaskImgDTO;
+import zjnu.huawei.pcb.entity.harmony.TaskImgEntity;
 import zjnu.huawei.pcb.service.harmony.TaskImgService;
 import zjnu.huawei.pcb.service.harmony.TaskService;
 import zjnu.huawei.pcb.utils.HttpRequestReader;
@@ -20,6 +22,7 @@ import zjnu.huawei.pcb.utils.harmony.ErrorEnum;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @PreAuthorize
@@ -42,18 +45,18 @@ public class TaskImgController extends BaseController {
         }
     }
 
-//    @RequestMapping(value = "/add", method = RequestMethod.POST)
-//    public JSONObject add(@RequestBody TaskImgDTO taskImgDTO) {
-//        try {
-//            taskImgDTO.setHarmonyUserId(harmonyUserId);
-//            return CommonUtil.successJson(taskImgService.add(taskImgDTO));
-//        } catch (CommonJsonException e) {
-//            throw e;
-//        } catch (Exception e) {
-//            logger.error(e.toString());
-//            throw new CommonJsonException(ErrorEnum.E_400);
-//        }
-//    }
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public JSONObject add(@RequestBody JSONObject jsonObject) {
+        try {
+            jsonObject.put("harmonyUserId", harmonyUserId);
+            return CommonUtil.successJson(taskImgService.add(jsonObject));
+        } catch (CommonJsonException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error(e.toString());
+            throw new CommonJsonException(ErrorEnum.E_400);
+        }
+    }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public JSONObject update(@RequestBody TaskImgDTO taskImgDTO) {
@@ -68,11 +71,23 @@ public class TaskImgController extends BaseController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public JSONObject remove(HttpServletRequest request) throws Exception {
-        JSONObject jsonObject = HttpRequestReader.getJsonObject(request);
-        String taskImgIds = jsonObject.getString("taskImgIds");
+    public JSONObject remove() {
         try {
-            return CommonUtil.successJson(taskImgService.remove(taskImgIds));
+            JSONObject jsonObject = HttpRequestReader.getJsonObject(request);
+            String imgIds = jsonObject.getString("imgIds");
+            return CommonUtil.successJson(taskImgService.remove(imgIds));
+        } catch (CommonJsonException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error(e.toString());
+            throw new CommonJsonException(ErrorEnum.E_400);
+        }
+    }
+
+    @RequestMapping(value = "/detect", method = RequestMethod.POST)
+    public JSONObject detect(@RequestBody List<TaskImgEntity> taskImgList) {
+        try {
+            return CommonUtil.successJson(taskImgService.detect(taskImgList));
         } catch (CommonJsonException e) {
             throw e;
         } catch (Exception e) {

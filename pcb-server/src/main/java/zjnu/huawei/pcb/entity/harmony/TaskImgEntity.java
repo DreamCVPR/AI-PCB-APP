@@ -10,7 +10,8 @@ import java.util.Date;
 public class TaskImgEntity {
     private Long imgId; 
     private String imgName; 
-    private String imgUrl; 
+    private String imgUrl;
+    private String imgSize;
     private Integer isDetect;
     private String detectionClasses; 
     private String detectionBoxes; 
@@ -18,6 +19,8 @@ public class TaskImgEntity {
     private Long taskId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") 
     private Date gmtCreate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date gmtDelete;
 
     public TaskImgEntity(String imgName, String imgUrl, Integer isDetect, Long taskId, Date gmtCreate) {
         this.imgName = imgName;

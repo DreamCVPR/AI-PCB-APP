@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CommonJsonException.class)
     public JSONObject handleRuntimeException(CommonJsonException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',发生未知异常.", requestURI, e);
+        log.error("请求地址'{}'," + e.getMessage(), requestURI, e);
         return e.getResultJson();
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    List<TaskEntity> query(Long harmonyUserId) throws Exception;
+    List<TaskDTO> query(TaskDTO taskDTO) throws Exception;
 
     Integer add(TaskDTO taskDTO) throws Exception;
 

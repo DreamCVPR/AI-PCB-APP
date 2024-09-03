@@ -7,11 +7,14 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import sun.misc.BASE64Decoder;
 import zjnu.huawei.pcb.config.MinioConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import zjnu.huawei.pcb.controller.harmony.TaskController;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -26,6 +29,8 @@ public class MinioUtil {
     private MinioConfig minioConfig;
     @Resource
     private MinioClient client;
+
+    private final Logger logger = LoggerFactory.getLogger(MinioUtil.class);
 
     /*
      * @Description 下载
@@ -57,7 +62,7 @@ public class MinioUtil {
         }
         byte[] bytes = outputStream.toByteArray();
         FileItemFactory factory = new DiskFileItemFactory(16, null);
-        FileItem fileItem = factory.createItem("images", "images/jpeg", false, originName);
+        FileItem fileItem = factory.createItem("images", object.headers().get("Content-Type"), false, originName);
         IOUtils.copy(new ByteArrayInputStream(bytes), fileItem.getOutputStream());
         return new CommonsMultipartFile(fileItem);
     }
@@ -69,23 +74,28 @@ public class MinioUtil {
         if (fileUrl == null) {
             return null;
         }
-        PutObjectArgs args = PutObjectArgs.builder()
-                .bucket(minioConfig.getBucketName())
-                .object(fileUrl)
-                .stream(file.getInputStream(), file.getSize(), -1)
-                .contentType(file.getContentType())
-                .build();
-        client.putObject(args);
-        return "/api/point/download/" + fileUrl;
+        try {
+            PutObjectArgs args = PutObjectArgs.builder()
+                    .bucket(minioConfig.getBucketName())
+                    .object(fileUrl)
+                    .stream(file.getInputStream(), file.getSize(), -1)
+                    .contentType(file.getContentType())
+                    .build();
+            client.putObject(args);
+            return fileUrl;
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return null;
+        }
     }
 
     /*
      * @Description 删除
      **/
-    public void remove(String fileName, String type) throws Exception {
+    public void remove(String fileUrl) throws Exception {
         RemoveObjectArgs args = RemoveObjectArgs.builder()
                 .bucket(minioConfig.getBucketName())
-                .object(type+"/"+fileName)
+                .object("image/"+fileUrl)
                 .build();
         client.removeObject(args);
     }

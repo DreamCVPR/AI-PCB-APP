@@ -16,10 +16,10 @@ public class TaskEntity {
     private String taskDesc; 
     private Long harmonyUserId;
     private Integer taskState;
-    private Integer countDetectImg;
-    private Integer countAllImg;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date gmtCreate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date gmtDelete;
 
     public TaskEntity(Long taskId, Integer taskState) {
         this.taskId = taskId;

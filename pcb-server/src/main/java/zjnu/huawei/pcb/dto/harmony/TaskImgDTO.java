@@ -13,7 +13,8 @@ import java.util.Date;
 public class TaskImgDTO {
     private Long imgId; 
     private String imgName; 
-    private String imgUrl; 
+    private String imgUrl;
+    private String imgSize;
     private Integer isDetect;
     private String detectionClasses; 
     private String detectionBoxes; 
