@@ -1,12 +1,9 @@
 package zjnu.huawei.pcb.mapper.harmony;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.annotations.*;
 import zjnu.huawei.pcb.dto.harmony.TaskDTO;
-import zjnu.huawei.pcb.entity.basic.UserEntity;
+import zjnu.huawei.pcb.dto.harmony.TaskImgDTO;
 import zjnu.huawei.pcb.entity.harmony.TaskEntity;
-import zjnu.huawei.pcb.entity.harmony.TaskImgEntity;
-import zjnu.huawei.pcb.entity.system.HarmonyUserEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +24,14 @@ public interface TaskMapper {
             "gmt_create DESC " +
             "</script>"})
     List<TaskDTO> queryById(@Param("queryParam") TaskDTO taskDTO) throws Exception;
+
+    @Select({"<script>SELECT " +
+            "ti.task_id, is_detect, detection_classes, detection_boxes, detection_scores " +
+            "FROM task_img ti LEFT JOIN harmony_task ht on ti.gmt_delete is NULL AND ti.task_id = ht.task_id " +
+            "WHERE ht.gmt_delete is NULL " +
+            "AND harmony_user_id = #{harmonyUserId} " +
+            "</script>"})
+    List<TaskImgDTO> queryImgByUserId(@Param("harmonyUserId") Long harmonyUserId) throws Exception;
 
     @Select({"<script>SELECT " +
             "ht.task_id, COALESCE(SUM(is_detect), 0) as countDetectImg, COUNT(is_detect) as countAllImg, " +

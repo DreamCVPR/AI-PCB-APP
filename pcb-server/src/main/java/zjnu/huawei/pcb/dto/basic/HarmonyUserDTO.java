@@ -1,4 +1,4 @@
-package zjnu.huawei.pcb.dto.system;
+package zjnu.huawei.pcb.dto.basic;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

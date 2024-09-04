@@ -11,13 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import javax.net.ssl.*;
 import java.io.*;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 
@@ -36,7 +30,11 @@ public class FileUtils
     public static List<MultipartFile> base642MultipartFileList(JSONArray base64String, JSONArray fileName) throws Exception {
         List<MultipartFile> res = new ArrayList<>();
         for (int i = 0; i < base64String.size(); i++) {
-            res.add(base642MultipartFile(base64String.getString(i), fileName.getString(i)));
+            String name = "a.jpg";
+            if (i < fileName.size()) {
+                name = fileName.getString(i);
+            }
+            res.add(base642MultipartFile(base64String.getString(i), name));
         }
         return res;
     }

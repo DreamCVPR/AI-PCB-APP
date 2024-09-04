@@ -1,26 +1,15 @@
 package zjnu.huawei.pcb.service.system.impl;
 
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zjnu.huawei.pcb.config.exception.CommonJsonException;
-import zjnu.huawei.pcb.dto.system.HarmonyTokenDTO;
-import zjnu.huawei.pcb.dto.system.HarmonyUserDTO;
-import zjnu.huawei.pcb.entity.system.HarmonyUserEntity;
-import zjnu.huawei.pcb.mapper.basic.UserMapper;
 import zjnu.huawei.pcb.mapper.harmony.TaskImgMapper;
 import zjnu.huawei.pcb.mapper.harmony.TaskMapper;
-import zjnu.huawei.pcb.service.system.AccountService;
 import zjnu.huawei.pcb.service.system.ScheduledTaskService;
-import zjnu.huawei.pcb.utils.JWTUtil;
 import zjnu.huawei.pcb.utils.file.MinioUtil;
-import zjnu.huawei.pcb.utils.harmony.ErrorEnum;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
 @Service

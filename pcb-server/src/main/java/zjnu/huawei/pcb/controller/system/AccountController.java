@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import zjnu.huawei.pcb.config.exception.CommonJsonException;
 import zjnu.huawei.pcb.controller.BaseController;
 import zjnu.huawei.pcb.dto.system.HarmonyTokenDTO;
-import zjnu.huawei.pcb.dto.system.HarmonyUserDTO;
+import zjnu.huawei.pcb.dto.basic.HarmonyUserDTO;
 import zjnu.huawei.pcb.service.system.AccountService;
 import zjnu.huawei.pcb.utils.harmony.CommonUtil;
 import zjnu.huawei.pcb.utils.harmony.ErrorEnum;

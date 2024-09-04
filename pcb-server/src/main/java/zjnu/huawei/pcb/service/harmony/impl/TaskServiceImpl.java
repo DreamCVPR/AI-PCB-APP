@@ -51,17 +51,59 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> query(TaskDTO taskDTO) throws Exception {
-        List<TaskDTO> counts = taskMapper.countDetectImg(taskDTO.getHarmonyUserId());
+        List<TaskImgDTO> taskImgList = taskMapper.queryImgByUserId(taskDTO.getHarmonyUserId());
         List<TaskDTO> taskList = taskMapper.queryById(taskDTO);
         JSONObject taskMapCount = new JSONObject();
-        for (TaskDTO count : counts) {
-            taskMapCount.put(count.getTaskId().toString(), new Integer[]{count.getCountDetectImg(), count.getCountAllImg(), count.getCountDefectImg()});
+        for (TaskImgDTO taskImg : taskImgList) {
+            if (taskMapCount.get(taskImg.getTaskId().toString()) == null) {
+                taskMapCount.put(taskImg.getTaskId().toString(), new JSONObject(new HashMap<String, Object>(){{
+                    put("countDetectImg", 0);
+                    put("countAllImg", 0);
+                    put("countDefectImg", 0);
+                    put("countDefect", new HashMap<String, Integer>(){{
+                        put("mouse_bite", 0);
+                        put("short", 0);
+                        put("spur", 0);
+                        put("open_circuit", 0);
+                        put("spurious_copper", 0);
+                    }});
+                }}));
+            }
+            taskMapCount.getJSONObject(taskImg.getTaskId().toString()).put("countAllImg", 1+taskMapCount.getJSONObject(taskImg.getTaskId().toString()).getInteger("countAllImg"));
+            if (taskImg.getIsDetect() == 1) {
+                taskMapCount.getJSONObject(taskImg.getTaskId().toString()).put("countDetectImg", 1+taskMapCount.getJSONObject(taskImg.getTaskId().toString()).getInteger("countDetectImg"));
+                JSONArray detectionClasses = JSON.parseArray(taskImg.getDetectionClasses());
+                if (detectionClasses.size() > 0) {
+                    taskMapCount.getJSONObject(taskImg.getTaskId().toString()).put("countDefectImg", 1+taskMapCount.getJSONObject(taskImg.getTaskId().toString()).getInteger("countDefectImg"));
+                    for (Object o : detectionClasses) {
+                        String detectionClass = o.toString();
+                        taskMapCount.getJSONObject(taskImg.getTaskId().toString()).getJSONObject("countDefect").put(detectionClass, 1+taskMapCount.getJSONObject(taskImg.getTaskId().toString()).getJSONObject("countDefect").getInteger(detectionClass));
+                    }
+                }
+            }
         }
         for (TaskDTO task : taskList) {
-            JSONArray count = taskMapCount.getJSONArray(task.getTaskId().toString());
-            task.setCountDetectImg(count.getInteger(0));
-            task.setCountAllImg(count.getInteger(1));
-            task.setCountDefectImg(count.getInteger(2));
+            Integer countDetectImg = 0;
+            Integer countAllImg = 0;
+            Integer countDefectImg = 0;
+            JSONObject countDefect = new JSONObject(new HashMap<String, Object>(){{
+                put("mouse_bite", 0);
+                put("short", 0);
+                put("spur", 0);
+                put("open_circuit", 0);
+                put("spurious_copper", 0);
+            }});
+            if (taskMapCount.get(task.getTaskId().toString()) != null) {
+                JSONObject count = taskMapCount.getJSONObject(task.getTaskId().toString());
+                countDetectImg = count.getInteger("countDetectImg");
+                countAllImg = count.getInteger("countAllImg");
+                countDefectImg = count.getInteger("countDefectImg");
+                countDefect = count.getJSONObject("countDefect");
+            }
+            task.setCountDetectImg(countDetectImg);
+            task.setCountAllImg(countAllImg);
+            task.setCountDefectImg(countDefectImg);
+            task.setCountDefect(countDefect);
         }
         return taskList;
     }

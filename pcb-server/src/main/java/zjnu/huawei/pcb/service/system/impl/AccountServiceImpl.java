@@ -5,9 +5,9 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.stereotype.Service;
 import zjnu.huawei.pcb.config.exception.CommonJsonException;
 import zjnu.huawei.pcb.dto.system.HarmonyTokenDTO;
-import zjnu.huawei.pcb.dto.system.HarmonyUserDTO;
+import zjnu.huawei.pcb.dto.basic.HarmonyUserDTO;
 
-import zjnu.huawei.pcb.entity.system.HarmonyUserEntity;
+import zjnu.huawei.pcb.entity.basic.HarmonyUserEntity;
 import zjnu.huawei.pcb.mapper.basic.UserMapper;
 import zjnu.huawei.pcb.service.system.AccountService;
 import zjnu.huawei.pcb.utils.JWTUtil;

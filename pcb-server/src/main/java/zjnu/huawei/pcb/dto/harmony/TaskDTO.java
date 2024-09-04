@@ -24,6 +24,7 @@ public class TaskDTO {
     private Integer countDetectImg;
     private Integer countAllImg;
     private Integer countDefectImg;
+    private JSONObject countDefect;
     private List<MultipartFile> files;
     private JSONObject base64Files;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

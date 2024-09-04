@@ -1,4 +1,4 @@
-package zjnu.huawei.pcb.entity.system;
+package zjnu.huawei.pcb.entity.basic;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
