@@ -182,18 +182,4 @@ public class TaskServiceImpl implements TaskService {
         thread.start();
         return taskImgList.size();
     }
-
-    @Transactional(rollbackFor = Exception.class)
-    public Integer detectOne(TaskImgEntity taskImgEntity) throws Exception {
-        JSONObject pred = serviceService.predict(minioUtil.getFile(taskImgEntity.getImgUrl(), taskImgEntity.getImgName()));
-        if (pred.getString("detection_classes") == null) {
-            return 0;
-        }
-        taskImgEntity.setIsDetect(1);
-        taskImgEntity.setDetectionClasses(pred.getString("detection_classes"));
-        taskImgEntity.setDetectionBoxes(pred.getString("detection_boxes"));
-        taskImgEntity.setDetectionScores(pred.getString("detection_scores"));
-        taskImgMapper.updateDetect(taskImgEntity);
-        return 1;
-    }
 }

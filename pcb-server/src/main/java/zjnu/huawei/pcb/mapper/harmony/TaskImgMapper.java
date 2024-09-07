@@ -63,6 +63,11 @@ public interface TaskImgMapper {
     Integer update(@Param("entity") TaskImgEntity entity) throws Exception;
 
     @Update("UPDATE task_img " +
+            "SET task_id = #{taskId} " +
+            "WHERE img_id = #{imgId} ")
+    Integer changeTask(@Param("imgId") String imgId, @Param("taskId") Long taskId) throws Exception;
+
+    @Update("UPDATE task_img " +
             "SET is_detect = #{entity.isDetect}, detection_classes = #{entity.detectionClasses}, detection_boxes = #{entity.detectionBoxes}, detection_scores = #{entity.detectionScores} " +
             "WHERE img_id = #{entity.imgId}")
     Integer updateDetect(@Param("entity") TaskImgEntity entity) throws Exception;

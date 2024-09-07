@@ -35,7 +35,7 @@ public interface UserMapper {
     Integer add(@Param("entity") HarmonyUserEntity entity) throws Exception;
 
     @Update("UPDATE harmony_user " +
-            "SET user_name = #{entity.userName}, user_phone = #{entity.userPhone} " +
+            "SET user_name = #{entity.userName}, user_phone = #{entity.userPhone}, user_info = #{entity.userInfo} " +
             "WHERE harmony_user_id = #{entity.harmonyUserId}")
     Integer update(@Param("entity") HarmonyUserEntity entity) throws Exception;
 
@@ -43,7 +43,7 @@ public interface UserMapper {
     Integer remove(@Param("harmonyUserId") Long harmonyUserId) throws Exception;
 
     @Update("update harmony_user set user_img = #{imageUrl} where harmony_user_id = #{harmonyUserId}")
-    Integer changeImage(@Param("userId")Long userId,
+    Integer changeImage(@Param("harmonyUserId")Long harmonyUserId,
                         @Param("imageUrl")String imageUrl);
 
     @Update("UPDATE harmony_user SET login_pwd = #{loginPwd} WHERE harmony_user_id = #{harmonyUserId}")

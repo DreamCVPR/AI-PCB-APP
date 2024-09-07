@@ -95,7 +95,7 @@ public class FileController extends BaseController {
         String fileName = file.getOriginalFilename();
         try {
             String saveName= harmonyUserId + (System.currentTimeMillis()+fileName.substring(fileName.lastIndexOf('.')));
-            minioUtil.upload(file, "image/" + saveName);
+            minioUtil.upload(file, saveName);
             JSONObject res = new JSONObject();
             res.put("saveName",saveName);
             res.put("size", file.getSize());

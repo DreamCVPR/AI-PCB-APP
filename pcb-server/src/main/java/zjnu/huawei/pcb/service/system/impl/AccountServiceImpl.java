@@ -53,6 +53,9 @@ public class AccountServiceImpl implements AccountService {
         return new HarmonyUserDTO(
                 harmonyUserEntity.getUserName(),
                 harmonyUserEntity.getUserPhone(),
+                harmonyUserEntity.getUserImg(),
+                harmonyUserEntity.getLoginPwd(),
+                harmonyUserDTO.getUserInfo(),
                 token
         );
     }

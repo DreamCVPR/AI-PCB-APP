@@ -17,6 +17,7 @@ public class HarmonyUserEntity {
     private String userImg;
     private String userName;
     private String userPhone;
+    private String userInfo;
     private String loginName;
     private String loginPwd;
 }

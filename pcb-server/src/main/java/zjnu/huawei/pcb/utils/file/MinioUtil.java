@@ -77,7 +77,7 @@ public class MinioUtil {
         try {
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(minioConfig.getBucketName())
-                    .object(fileUrl)
+                    .object("image/" + fileUrl)
                     .stream(file.getInputStream(), file.getSize(), -1)
                     .contentType(file.getContentType())
                     .build();

@@ -3,10 +3,7 @@ package zjnu.huawei.pcb.controller.harmony;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import zjnu.huawei.pcb.config.aop.PreAuthorize;
@@ -28,6 +25,7 @@ import java.util.List;
 
 @RestController
 @PreAuthorize
+@CrossOrigin
 @RequestMapping(value = "/api/task")
 public class TaskController extends BaseController {
     @Resource

@@ -84,6 +84,18 @@ public class TaskImgController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/changeTask", method = RequestMethod.POST)
+    public JSONObject changeTask(@RequestBody JSONObject jsonObject) {
+        try {
+            return CommonUtil.successJson(taskImgService.changeTask(jsonObject));
+        } catch (CommonJsonException e) {
+            throw e;
+        } catch (Exception e) {
+            logger.error(e.toString());
+            throw new CommonJsonException(ErrorEnum.E_400);
+        }
+    }
+
     @RequestMapping(value = "/detect", method = RequestMethod.POST)
     public JSONObject detect(@RequestBody List<TaskImgEntity> taskImgList) {
         try {

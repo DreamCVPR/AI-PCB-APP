@@ -19,13 +19,17 @@ public class HarmonyUserDTO {
     private String userImg;
     private String userName;
     private String userPhone;
+    private String userInfo;
     private String loginName;
     private String loginPwd;
     private String token;
 
-    public HarmonyUserDTO(String userName, String userPhone, String token) {
+    public HarmonyUserDTO(String userName, String userPhone, String userImg, String loginPwd, String userInfo, String token) {
         this.userName = userName;
         this.userPhone = userPhone;
+        this.userImg = userImg;
+        this.userInfo = userInfo;
+        this.loginPwd = loginPwd;
         this.token = token;
     }
 }

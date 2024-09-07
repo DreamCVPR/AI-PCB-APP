@@ -18,5 +18,7 @@ public interface TaskImgService {
 
     Integer remove(String taskImgIds) throws Exception;
 
+    Integer changeTask(JSONObject jsonObject) throws Exception;
+
     Integer detect(List<TaskImgEntity> taskImgList) throws Exception;
 }

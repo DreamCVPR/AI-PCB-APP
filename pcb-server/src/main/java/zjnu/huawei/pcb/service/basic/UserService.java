@@ -17,5 +17,5 @@ public interface UserService {
     HarmonyUserEntity getByUserId(Long harmonyUserId) throws Exception;
 
 
-    Integer changeImage(JSONObject jsonObject) throws Exception;
+    String changeImage(JSONObject jsonObject) throws Exception;
 }

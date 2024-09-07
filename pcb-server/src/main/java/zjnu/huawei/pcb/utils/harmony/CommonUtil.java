@@ -46,7 +46,7 @@ public class CommonUtil {
     public static JSONObject errorJson(int httpStatus) {
         JSONObject resultJson = new JSONObject();
         resultJson.put("status", httpStatus);
-        resultJson.put("message", "error");
+        resultJson.put("message", "系统异常，请稍后再试");
         return resultJson;
     }
 

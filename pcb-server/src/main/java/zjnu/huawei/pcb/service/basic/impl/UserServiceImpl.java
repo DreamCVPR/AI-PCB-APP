@@ -50,20 +50,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer changeImage(JSONObject jsonObject) throws Exception {
+    public String changeImage(JSONObject jsonObject) throws Exception {
         JSONArray imgBase64List = new JSONArray();
         imgBase64List.add(jsonObject.getString("file"));
         List<MultipartFile> files = FileUtils.base642MultipartFileList(imgBase64List, new JSONArray());
         if (files.size() > 0) {
             String saveName = "avatar_" + jsonObject.getString("harmonyUserId") + "_" + (System.currentTimeMillis()+".jpg");
-            String fileUrl = minioUtil.upload(files.get(0), "image/" + saveName);
+            String fileUrl = minioUtil.upload(files.get(0), saveName);
             try {
-                return userMapper.changeImage(jsonObject.getLong("harmonyUserId"), fileUrl);
+                userMapper.changeImage(jsonObject.getLong("harmonyUserId"), fileUrl);
             } catch (Exception e) {
                 minioUtil.remove(fileUrl);
                 throw e;
             }
+            return fileUrl;
         }
-        return 1;
+        return "";
     }
 }

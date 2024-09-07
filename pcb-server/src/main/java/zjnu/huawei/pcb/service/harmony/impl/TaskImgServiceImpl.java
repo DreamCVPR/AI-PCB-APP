@@ -54,7 +54,7 @@ public class TaskImgServiceImpl implements TaskImgService {
             for (int i = 0; i < files.size(); i++) {
                 String fileName = files.get(i).getOriginalFilename();
                 String saveName= jsonObject.getString("harmonyUserId") + "_"+i+(System.currentTimeMillis()+fileName.substring(fileName.lastIndexOf('.')));
-                String fileUrl = minioUtil.upload(files.get(i), "image/" + saveName);
+                String fileUrl = minioUtil.upload(files.get(i), saveName);
                 if (fileUrl != null) fileUrlList.add(fileUrl);
                 taskImgList.add(new TaskImgDTO(fileName, saveName, 0, jsonObject.getLong("taskId"), new Date()));
             }
@@ -102,6 +102,16 @@ public class TaskImgServiceImpl implements TaskImgService {
             res += taskImgMapper.softRemove(Long.parseLong(id), removeDate);
         }
         return res;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer changeTask(JSONObject jsonObject) throws Exception {
+        String[] imgIds = jsonObject.getString("imgIds").split(",");
+        for (String imgId : imgIds) {
+            taskImgMapper.changeTask(imgId, jsonObject.getLong("taskId"));
+        }
+        return imgIds.length;
     }
 
     @Override
